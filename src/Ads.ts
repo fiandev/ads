@@ -176,8 +176,9 @@ export class Ads {
   private selectAdByType(ads: AdItem[], type: AdType): AdItem | null {
     if (ads.length === 0) return null;
 
-    const typeIndex = type === "vertical" ? 0 : type === "horizontal" ? 1 : 2;
-    return ads[Math.min(typeIndex, ads.length - 1)];
+    // Randomly select an ad from the available ads
+    const randomIndex = Math.floor(Math.random() * ads.length);
+    return ads[randomIndex];
   }
 
   private createAdElement(container: Element, ad: AdItem): void {

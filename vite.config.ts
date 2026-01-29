@@ -1,13 +1,23 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
 
+// Configuration for multiple format build
 export default defineConfig({
   build: {
+    copyPublicDir: false, // Don't copy public directory
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
       name: "ads",
-      fileName: "ads",
-      formats: ["umd", "es", "cjs"], // UMD for browser, ES for modern bundlers, CJS for Node
+      fileName: (format) => {
+        if (format === 'umd') {
+          return 'ads.umd.js';
+        } else if (format === 'es') {
+          return 'ads.mjs';
+        } else { // cjs
+          return 'ads.js';
+        }
+      },
+      formats: ["es", "cjs", "umd"], // ES, CJS, and UMD formats
     },
     rollupOptions: {
       external: [],
@@ -15,10 +25,9 @@ export default defineConfig({
         globals: {
           // Define globals if needed
         },
-        // Ensure the UMD name matches the global variable
-        extend: true,
       },
     },
+    emptyOutDir: false, // Important: Don't empty the dist directory to preserve CJS/ESM builds
   },
   define: {
     global: "globalThis",
