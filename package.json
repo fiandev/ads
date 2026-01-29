@@ -21,7 +21,11 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsc && tsc --project tsconfig.esm.json",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "version": "git add -A src/",
+    "postversion": "git push && git push --tags"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
@@ -29,5 +33,19 @@
   },
   "author": "fiandev",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fiandev/ads.git"
+  },
+  "keywords": [
+    "ads",
+    "advertisement",
+    "javascript",
+    "typescript"
+  ],
+  "description": "A lightweight ads library for JavaScript/TypeScript applications",
+  "publishConfig": {
+    "access": "public"
+  },
   "private": false
 }
