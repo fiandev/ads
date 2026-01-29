@@ -20,7 +20,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc && tsc --project tsconfig.esm.json",
+    "build": "tsc && tsc --project tsconfig.esm.json",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
