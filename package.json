@@ -1,14 +1,19 @@
 {
   "name": "@fiandev/ads",
-  "version": "1.0.0-fix",
+  "version": "1.0.1",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "browser": "dist/ads.umd.js",
   "types": "dist/cjs/index.d.ts",
   "exports": {
     ".": {
+      "browser": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/ads.umd.js"
+      },
       "import": {
         "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
+        "default": "./dist/esm/index.mjs"
       },
       "require": {
         "types": "./dist/cjs/index.d.ts",
@@ -20,7 +25,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && tsc --project tsconfig.esm.json",
+    "build": "npm run build:lib && npm run build:bundle",
+    "build:lib": "tsc && tsc --project tsconfig.esm.json",
+    "build:bundle": "vite build",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -28,8 +35,9 @@
     "postversion": "git push && git push --tags"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "vite": "^7.3.1"
   },
   "author": "fiandev",
   "license": "MIT",
