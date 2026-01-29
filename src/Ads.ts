@@ -9,6 +9,8 @@ export class Ads {
   private static instance: Ads;
   private config: AdsConfig | null = null;
   private isBrowser: boolean;
+  private cachedAds: AdsResponse | null = null;
+  private fetchPromise: Promise<AdsResponse> | null = null;
 
   private constructor() {
     this.isBrowser =
@@ -34,12 +36,41 @@ export class Ads {
       console.log("[Ads] Initialized with config:", this.config);
     }
 
+    // Auto-fetch ads after initialization (non-blocking)
+    this.fetchAndCacheAds();
+
     if (this.isBrowser) {
       this.renderAds();
     }
   }
 
-  public async getAds(): Promise<AdsResponse> {
+  private async fetchAndCacheAds(): Promise<void> {
+    if (!this.config) {
+      console.error("Ads library not initialized. Call ads.init() first.");
+      return;
+    }
+
+    // If we already have a pending fetch, skip
+    if (this.fetchPromise) {
+      return;
+    }
+
+    // Create a new fetch promise
+    this.fetchPromise = this.performFetch();
+
+    try {
+      this.cachedAds = await this.fetchPromise;
+    } catch (error) {
+      if (this.config.debug) {
+        console.error("[Ads] Failed to fetch ads:", error);
+      }
+    } finally {
+      // Clear the fetch promise after completion
+      this.fetchPromise = null;
+    }
+  }
+
+  private async performFetch(): Promise<AdsResponse> {
     if (!this.config) {
       throw new Error("Ads library not initialized. Call ads.init() first.");
     }
@@ -84,6 +115,28 @@ export class Ads {
 
       throw error;
     }
+  }
+
+  public getAds(): Promise<AdsResponse> {
+    if (!this.config) {
+      throw new Error("Ads library not initialized. Call ads.init() first.");
+    }
+
+    // If we already have cached data, return a resolved promise with cached data
+    if (this.cachedAds) {
+      return Promise.resolve(this.cachedAds);
+    }
+
+    // If there's a pending fetch, return that promise
+    if (this.fetchPromise) {
+      return this.fetchPromise;
+    }
+
+    // If no cached data and no pending fetch, initiate a new fetch
+    return this.performFetch().then((data) => {
+      this.cachedAds = data;
+      return data;
+    });
   }
 
   private renderAds(): void {
