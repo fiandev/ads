@@ -3,6 +3,19 @@
  * Authored by Aditia Akbar (fiandev)
  */
 
+import ads, { Ads } from "./Ads";
+
+declare global {
+  interface Window {
+    ads: Ads;
+    Ads: typeof Ads;
+  }
+}
+
 export * from "./types";
-export { default as ads } from "./Ads";
-export { Ads } from "./Ads";
+export { ads, Ads };
+
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  window.ads = ads;
+  window.Ads = Ads;
+}
