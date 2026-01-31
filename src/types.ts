@@ -1,3 +1,8 @@
+/**
+ * Ads library
+ * Authored by Aditia Akbar (fiandev)
+ */
+
 export interface AdsConfig {
   url: string;
   debug?: boolean;

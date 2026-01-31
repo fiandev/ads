@@ -1,3 +1,8 @@
+/**
+ * Ads library
+ * Authored by Aditia Akbar (fiandev)
+ */
+
 import { AdsConfig, AdsResponse, AdItem, AdType } from "./types";
 
 /** Constant definitions */
